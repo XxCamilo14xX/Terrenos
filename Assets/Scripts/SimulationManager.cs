@@ -8,11 +8,18 @@ public class SimulationManager : MonoBehaviour
     private float time = 0f;
 
     public List<Bunny> bunnies = new List<Bunny>();
+    public List<Predator> predators = new List<Predator>();
+    public FoodSpawner foodSpawner;
 
     void Start()
     {
-        Bunny[] found = FindObjectsByType<Bunny>(FindObjectsSortMode.InstanceID);
-        bunnies = new List<Bunny>(found);
+        Bunny[] foundBunnies = FindObjectsByType<Bunny>(FindObjectsSortMode.InstanceID);
+        bunnies = new List<Bunny>(foundBunnies);
+
+        Predator[] foundPredators = FindObjectsByType<Predator>(FindObjectsSortMode.InstanceID);
+        predators = new List<Predator>(foundPredators);
+
+        foodSpawner = FindFirstObjectByType<FoodSpawner>();
     }
 
     void Update()
@@ -35,5 +42,15 @@ public class SimulationManager : MonoBehaviour
                 b.Simulate(secondsPerIteration);
             }
         }
+
+        foreach (Predator p in predators)
+        {
+            if (p != null && p.isAlive)
+            {
+               p .Simulate(secondsPerIteration);
+            }
+        }
+
+        if (foodSpawner != null) foodSpawner.Simulate(secondsPerIteration);
     }
 }
